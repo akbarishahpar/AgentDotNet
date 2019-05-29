@@ -190,10 +190,10 @@ namespace AgentDotNet
         {
             try
             {
-                if (_scope == null) throw new Exception("Agnet has not been binded to any scope already");
-                Halt();
+                if (_scope == null) throw new Exception("Agnet has not been binded to any scope already");                
                 scope.UnRegisterAgent(Name);
                 this._scope = null;
+                Halt();
             }            
             catch (Exception e)
             {

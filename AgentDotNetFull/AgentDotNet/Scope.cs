@@ -12,7 +12,8 @@ namespace AgentDotNet
 {
     public enum ScopeState { Stopped, Started }
     public class Scope
-    {        
+    {
+        public readonly object agentsLock = new object();
         public readonly int port;
         public readonly IPAddress globalAddress;
         public readonly IPAddress listenerAddress;
@@ -243,7 +244,10 @@ namespace AgentDotNet
             {
                 if (agents.ContainsKey(Agent.Name)) throw new Exception("Duplicate agent name");
                 if (Agent.Scope == null) throw new Exception("Null Scope for agent is not permitted");
-                agents.Add(Agent.Name, Agent);
+                lock (agentsLock)
+                {
+                    agents.Add(Agent.Name, Agent);
+                }
             }
             catch (Exception e)
             {
@@ -255,7 +259,10 @@ namespace AgentDotNet
         {
             try
             {
-                agents.Remove(Name);
+                lock (agentsLock)
+                {
+                    agents.Remove(Name);
+                }
             }
             catch (Exception e)
             {
